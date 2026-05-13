@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 const MainLayout = () => {
   return (
@@ -8,11 +8,33 @@ const MainLayout = () => {
           <h2 className="mb-8 text-2xl font-bold">Gym System</h2>
 
           <nav className="space-y-3 text-sm">
-            <p className="rounded-lg bg-emerald-500 px-4 py-2 font-medium">
+            <Link
+              to="/dashboard"
+              className="block rounded-lg bg-emerald-500 px-4 py-2 font-medium"
+            >
               Dashboard
-            </p>
-            <p className="rounded-lg px-4 py-2 text-slate-300">Profile</p>
-            <p className="rounded-lg px-4 py-2 text-slate-300">Settings</p>
+            </Link>
+
+            <Link
+              to="/members"
+              className="block rounded-lg px-4 py-2 text-slate-300 hover:bg-slate-800"
+            >
+              Members
+            </Link>
+
+            <Link
+              to="/profile"
+              className="block rounded-lg px-4 py-2 text-slate-300 hover:bg-slate-800"
+            >
+              Profile
+            </Link>
+
+            <Link
+              to="/settings"
+              className="block rounded-lg px-4 py-2 text-slate-300 hover:bg-slate-800"
+            >
+              Settings
+            </Link>
           </nav>
         </aside>
 

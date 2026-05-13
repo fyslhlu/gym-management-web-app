@@ -8,6 +8,7 @@ import Signup from "@/features/auth/signup/Signup";
 import Dashboard from "@/features/dashboard/Dashboard";
 import Profile from "@/features/profile/Profile";
 import Settings from "@/features/settings/Settings";
+import Members from "@/features/members/Members";
 
 const AppRoutes = () => {
   return (
@@ -23,6 +24,7 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/members" element={<Members />} />
       </Route>
     </Routes>
   );
