@@ -9,6 +9,13 @@ import Dashboard from "@/features/dashboard/Dashboard";
 import Profile from "@/features/profile/Profile";
 import Settings from "@/features/settings/Settings";
 import Members from "@/features/members/Members";
+import Trainers from "@/features/trainers/Trainers";
+import Plans from "@/features/plans/Plans";
+import Subscriptions from "@/features/subscriptions/Subscriptions";
+import Payments from "@/features/payments/Payments";
+import Workouts from "@/features/workouts/Workouts";
+import Attendance from "@/features/attendance/Attendance";
+import Reports from "@/features/reports/Reports";
 
 const AppRoutes = () => {
   return (
@@ -22,9 +29,16 @@ const AppRoutes = () => {
 
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/members" element={<Members />} />
+        <Route path="/trainers" element={<Trainers />} />
+        <Route path="/plans" element={<Plans />} />
+        <Route path="/subscriptions" element={<Subscriptions />} />
+        <Route path="/payments" element={<Payments />} />
+        <Route path="/workouts" element={<Workouts />} />
+        <Route path="/attendance" element={<Attendance />} />
+        <Route path="/reports" element={<Reports />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
-        <Route path="/members" element={<Members />} />
       </Route>
     </Routes>
   );
