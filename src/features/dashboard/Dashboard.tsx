@@ -1,3 +1,5 @@
+import ToastButtons from "@/components/toast/ToastButtons";
+
 const Dashboard = () => {
   return (
     <div>
@@ -21,6 +23,10 @@ const Dashboard = () => {
           <p className="text-sm text-slate-500">Expired Subscriptions</p>
           <h2 className="mt-2 text-3xl font-bold text-red-500">15</h2>
         </div>
+      </div>
+
+      <div className="mt-8">
+        <ToastButtons />
       </div>
     </div>
   );
