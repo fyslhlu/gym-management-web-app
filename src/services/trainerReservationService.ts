@@ -1,5 +1,7 @@
 import type { AppUser } from "@/services/authService";
 
+export type TrainerReservationStatus = "Pending" | "Approved" | "Rejected";
+
 export type TrainerReservation = {
   id: number;
   customerName: string;
@@ -13,7 +15,7 @@ export type TrainerReservation = {
   totalHours: number;
   totalCost: number;
   reservationDate: string;
-  status: "Reserved";
+  status: TrainerReservationStatus;
 };
 
 const TRAINER_RESERVATIONS_KEY = "trainerReservations";
@@ -26,6 +28,15 @@ export const getTrainerReservations = (): TrainerReservation[] => {
   }
 
   return JSON.parse(savedReservations) as TrainerReservation[];
+};
+
+export const saveTrainerReservations = (
+  reservations: TrainerReservation[]
+) => {
+  localStorage.setItem(
+    TRAINER_RESERVATIONS_KEY,
+    JSON.stringify(reservations)
+  );
 };
 
 export const reserveTrainer = (
@@ -62,18 +73,35 @@ export const reserveTrainer = (
     totalHours,
     totalCost,
     reservationDate: new Date().toISOString().split("T")[0],
-    status: "Reserved",
+    status: "Pending",
   };
 
   const updatedReservations = [...reservations, newReservation];
 
-  localStorage.setItem(
-    TRAINER_RESERVATIONS_KEY,
-    JSON.stringify(updatedReservations)
-  );
+  saveTrainerReservations(updatedReservations);
 
   return {
     success: true,
-    message: `${trainerName} reserved successfully. Total cost: $${totalCost}`,
+    message: `${trainerName} reservation sent. Waiting for admin approval.`,
   };
+};
+
+export const updateTrainerReservationStatus = (
+  reservationId: number,
+  status: TrainerReservationStatus
+) => {
+  const reservations = getTrainerReservations();
+
+  const updatedReservations = reservations.map((reservation) =>
+    reservation.id === reservationId
+      ? {
+          ...reservation,
+          status,
+        }
+      : reservation
+  );
+
+  saveTrainerReservations(updatedReservations);
+
+  return updatedReservations;
 };

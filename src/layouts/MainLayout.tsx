@@ -22,14 +22,14 @@ const MainLayout = () => {
   ];
 
   const customerNavItems = [
-    { label: "Dashboard", path: "/dashboard" },
-    { label: "Plans", path: "/plans" },
-    { label: "Trainers", path: "/trainers" },
-    { label: "Workouts", path: "/workouts" },
-    { label: "Attendance", path: "/attendance" },
-    { label: "Profile", path: "/profile" },
-  ];
-
+  { label: "Dashboard", path: "/dashboard" },
+  { label: "Plans", path: "/plans" },
+  { label: "Trainers", path: "/trainers" },
+  { label: "Workouts", path: "/workouts" },
+  { label: "My Activity", path: "/my-activity" },
+  { label: "Attendance", path: "/attendance" },
+  { label: "Profile", path: "/profile" },
+];
   const navItems =
     currentUser?.role === "customer" ? customerNavItems : adminNavItems;
 

@@ -1,5 +1,7 @@
 import type { AppUser } from "@/services/authService";
 
+export type WorkoutReservationStatus = "Pending" | "Approved" | "Rejected";
+
 export type WorkoutReservation = {
   id: number;
   customerName: string;
@@ -13,7 +15,7 @@ export type WorkoutReservation = {
   totalSessions: number;
   totalCost: number;
   reservationDate: string;
-  status: "Active";
+  status: WorkoutReservationStatus;
 };
 
 const WORKOUT_RESERVATIONS_KEY = "workoutReservations";
@@ -26,6 +28,15 @@ export const getWorkoutReservations = (): WorkoutReservation[] => {
   }
 
   return JSON.parse(savedReservations) as WorkoutReservation[];
+};
+
+export const saveWorkoutReservations = (
+  reservations: WorkoutReservation[]
+) => {
+  localStorage.setItem(
+    WORKOUT_RESERVATIONS_KEY,
+    JSON.stringify(reservations)
+  );
 };
 
 export const reserveWorkoutProgram = (
@@ -62,18 +73,35 @@ export const reserveWorkoutProgram = (
     totalSessions,
     totalCost,
     reservationDate: new Date().toISOString().split("T")[0],
-    status: "Active",
+    status: "Pending",
   };
 
   const updatedReservations = [...reservations, newReservation];
 
-  localStorage.setItem(
-    WORKOUT_RESERVATIONS_KEY,
-    JSON.stringify(updatedReservations)
-  );
+  saveWorkoutReservations(updatedReservations);
 
   return {
     success: true,
-    message: `${workoutName} activated successfully. Total cost: $${totalCost}`,
+    message: `${workoutName} request sent. Waiting for admin approval.`,
   };
+};
+
+export const updateWorkoutReservationStatus = (
+  reservationId: number,
+  status: WorkoutReservationStatus
+) => {
+  const reservations = getWorkoutReservations();
+
+  const updatedReservations = reservations.map((reservation) =>
+    reservation.id === reservationId
+      ? {
+          ...reservation,
+          status,
+        }
+      : reservation
+  );
+
+  saveWorkoutReservations(updatedReservations);
+
+  return updatedReservations;
 };

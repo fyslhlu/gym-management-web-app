@@ -16,6 +16,7 @@ import Payments from "@/features/payments/Payments";
 import Workouts from "@/features/workouts/Workouts";
 import Attendance from "@/features/attendance/Attendance";
 import Reports from "@/features/reports/Reports";
+import MyActivity from "@/features/myActivity/MyActivity";
 
 const AppRoutes = () => {
   return (
@@ -39,6 +40,7 @@ const AppRoutes = () => {
         <Route path="/reports" element={<Reports />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/my-activity" element={<MyActivity />} />
       </Route>
     </Routes>
   );

@@ -1,5 +1,7 @@
 import type { AppUser } from "@/services/authService";
 
+export type SubscriptionStatus = "Pending" | "Approved" | "Rejected";
+
 export type CustomerSubscription = {
   id: number;
   customerName: string;
@@ -9,7 +11,7 @@ export type CustomerSubscription = {
   duration: string;
   startDate: string;
   endDate: string;
-  status: "Active";
+  status: SubscriptionStatus;
 };
 
 const SUBSCRIPTIONS_KEY = "customerSubscriptions";
@@ -24,6 +26,12 @@ export const getCustomerSubscriptions = (): CustomerSubscription[] => {
   return JSON.parse(savedSubscriptions) as CustomerSubscription[];
 };
 
+export const saveCustomerSubscriptions = (
+  subscriptions: CustomerSubscription[]
+) => {
+  localStorage.setItem(SUBSCRIPTIONS_KEY, JSON.stringify(subscriptions));
+};
+
 export const activateCustomerPlan = (
   user: AppUser,
   planName: string,
@@ -32,16 +40,16 @@ export const activateCustomerPlan = (
 ) => {
   const subscriptions = getCustomerSubscriptions();
 
-  const alreadyHasActivePlan = subscriptions.some(
+  const alreadyHasActiveOrPendingPlan = subscriptions.some(
     (subscription) =>
       subscription.customerEmail.toLowerCase() === user.email.toLowerCase() &&
-      subscription.status === "Active"
+      subscription.status !== "Rejected"
   );
 
-  if (alreadyHasActivePlan) {
+  if (alreadyHasActiveOrPendingPlan) {
     return {
       success: false,
-      message: "You already have an active plan",
+      message: "You already have a pending or approved plan",
     };
   }
 
@@ -61,18 +69,35 @@ export const activateCustomerPlan = (
     duration,
     startDate: startDate.toISOString().split("T")[0],
     endDate: endDate.toISOString().split("T")[0],
-    status: "Active",
+    status: "Pending",
   };
 
   const updatedSubscriptions = [...subscriptions, newSubscription];
 
-  localStorage.setItem(
-    SUBSCRIPTIONS_KEY,
-    JSON.stringify(updatedSubscriptions)
-  );
+  saveCustomerSubscriptions(updatedSubscriptions);
 
   return {
     success: true,
-    message: `${planName} activated successfully`,
+    message: `${planName} request sent. Waiting for admin approval.`,
   };
+};
+
+export const updateSubscriptionStatus = (
+  subscriptionId: number,
+  status: SubscriptionStatus
+) => {
+  const subscriptions = getCustomerSubscriptions();
+
+  const updatedSubscriptions = subscriptions.map((subscription) =>
+    subscription.id === subscriptionId
+      ? {
+          ...subscription,
+          status,
+        }
+      : subscription
+  );
+
+  saveCustomerSubscriptions(updatedSubscriptions);
+
+  return updatedSubscriptions;
 };

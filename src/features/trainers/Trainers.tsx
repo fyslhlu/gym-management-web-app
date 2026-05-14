@@ -5,7 +5,9 @@ import { showError, showSuccess } from "@/services/notificationService";
 import {
   getTrainerReservations,
   reserveTrainer,
+  updateTrainerReservationStatus,
   type TrainerReservation,
+  type TrainerReservationStatus,
 } from "@/services/trainerReservationService";
 import {
   darkCard,
@@ -130,13 +132,38 @@ const Trainers = () => {
     setHoursPerDay(1);
   };
 
+  const handleReservationStatusChange = (
+    reservationId: number,
+    status: TrainerReservationStatus
+  ) => {
+    const updatedReservations = updateTrainerReservationStatus(
+      reservationId,
+      status
+    );
+
+    setReservations(updatedReservations);
+    showSuccess(`Trainer reservation ${status.toLowerCase()} successfully`);
+  };
+
+  const getStatusClass = (status: TrainerReservationStatus) => {
+    if (status === "Approved") {
+      return "bg-emerald-500/15 text-emerald-400";
+    }
+
+    if (status === "Rejected") {
+      return "bg-red-500/15 text-red-400";
+    }
+
+    return "bg-yellow-500/15 text-yellow-400";
+  };
+
   return (
     <div>
       <h1 className={pageTitle}>Trainers</h1>
 
       <p className={pageSubtitle}>
         Customers can reserve trainers for a selected number of weeks, days, and
-        hours. Administrators can view all trainer reservations.
+        hours. Administrators can approve or reject all trainer reservations.
       </p>
 
       <div className="mt-8 grid gap-6 md:grid-cols-3">
@@ -257,13 +284,14 @@ const Trainers = () => {
                 <th className="p-4">Time</th>
                 <th className="p-4">Total Cost</th>
                 <th className="p-4">Status</th>
+                <th className="p-4">Action</th>
               </tr>
             </thead>
 
             <tbody>
               {reservations.length === 0 ? (
                 <tr className={darkTableRow}>
-                  <td className="p-4 text-[#A3A3A3]" colSpan={7}>
+                  <td className="p-4 text-[#A3A3A3]" colSpan={8}>
                     No trainer reservations yet.
                   </td>
                 </tr>
@@ -280,9 +308,48 @@ const Trainers = () => {
                     </td>
                     <td className="p-4">${reservation.totalCost}</td>
                     <td className="p-4">
-                      <span className="rounded-full bg-[#E50914]/15 px-3 py-1 text-xs font-bold text-[#FF4D00]">
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-bold ${getStatusClass(
+                          reservation.status
+                        )}`}
+                      >
                         {reservation.status}
                       </span>
+                    </td>
+                    <td className="p-4">
+                      {reservation.status === "Pending" ? (
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleReservationStatusChange(
+                                reservation.id,
+                                "Approved"
+                              )
+                            }
+                            className="rounded-full border border-emerald-500/40 px-3 py-1 text-xs font-bold text-emerald-400 transition hover:bg-emerald-500/10"
+                          >
+                            Approve
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleReservationStatusChange(
+                                reservation.id,
+                                "Rejected"
+                              )
+                            }
+                            className="rounded-full border border-red-500/40 px-3 py-1 text-xs font-bold text-red-400 transition hover:bg-red-500/10"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-[#A3A3A3]">
+                          No action
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))
