@@ -1,31 +1,32 @@
 export const themeColors = {
-  primary: "#0F172A",
-  secondary: "#22C55E",
-  background: "#F8FAFC",
-  card: "#FFFFFF",
-  text: "#0F172A",
-  mutedText: "#64748B",
+  primary: "#E50914",
+  secondary: "#FF4D00",
+  background: "#111111",
+  card: "#1C1C1C",
+  sidebar: "#0B0B0B",
+  text: "#FFFFFF",
+  mutedText: "#A3A3A3",
   warning: "#F59E0B",
   error: "#EF4444",
   success: "#22C55E",
 };
 
-export type ThemeColorName = "green" | "blue" | "purple";
+export type ThemeColorName = "red" | "orange" | "dark";
 
 export const themeOptions = {
-  green: {
-    name: "Green Gym Theme",
-    primary: "#0F172A",
-    secondary: "#22C55E",
+  red: {
+    name: "Red Power Theme",
+    primary: "#E50914",
+    secondary: "#FF4D00",
   },
-  blue: {
-    name: "Blue Fitness Theme",
-    primary: "#0F172A",
-    secondary: "#3B82F6",
+  orange: {
+    name: "Orange Energy Theme",
+    primary: "#FF4D00",
+    secondary: "#E85D04",
   },
-  purple: {
-    name: "Purple Modern Theme",
-    primary: "#0F172A",
-    secondary: "#8B5CF6",
+  dark: {
+    name: "Dark Premium Theme",
+    primary: "#FFFFFF",
+    secondary: "#E50914",
   },
 };
