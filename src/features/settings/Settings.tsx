@@ -6,7 +6,7 @@ import { themeOptions, type ThemeColorName } from "@/theme/themeConfig";
 
 const Settings = () => {
   const [selectedTheme, setSelectedTheme] =
-    useState<ThemeColorName>("green");
+    useState<ThemeColorName>("red");
 
   const handleThemeChange = (themeName: ThemeColorName) => {
     setSelectedTheme(themeName);
