@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { Button, TextField } from "@mui/material";
 
-import { showError, showSuccess, showWarning } from "@/services/notificationService";
+import {
+  getRegisteredUsers,
+  type AppUser,
+} from "@/services/authService";
+import {
+  showError,
+  showSuccess,
+  showWarning,
+} from "@/services/notificationService";
 import { themeOptions, type ThemeColorName } from "@/theme/themeConfig";
 import { darkCard, pageSubtitle, pageTitle } from "@/theme/pageStyles";
 
@@ -21,6 +29,8 @@ const Settings = () => {
   const [newAdminName, setNewAdminName] = useState("");
   const [newAdminEmail, setNewAdminEmail] = useState("");
 
+  const [registeredAccounts, setRegisteredAccounts] = useState<AppUser[]>([]);
+
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([
     {
       id: 1,
@@ -31,7 +41,9 @@ const Settings = () => {
   ]);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("selectedTheme") as ThemeColorName | null;
+    const savedTheme = localStorage.getItem(
+      "selectedTheme"
+    ) as ThemeColorName | null;
     const savedName = localStorage.getItem("adminName");
     const savedEmail = localStorage.getItem("adminEmail");
     const savedAdmins = localStorage.getItem("adminUsers");
@@ -51,6 +63,8 @@ const Settings = () => {
     if (savedAdmins) {
       setAdminUsers(JSON.parse(savedAdmins));
     }
+
+    setRegisteredAccounts(getRegisteredUsers());
   }, []);
 
   const handleThemeChange = (themeName: ThemeColorName) => {
@@ -113,12 +127,18 @@ const Settings = () => {
     showSuccess("Admin removed successfully");
   };
 
+  const handleRefreshRegisteredAccounts = () => {
+    setRegisteredAccounts(getRegisteredUsers());
+    showSuccess("Registered accounts refreshed");
+  };
+
   return (
     <div>
       <h1 className={pageTitle}>Settings</h1>
 
       <p className={pageSubtitle}>
-        Manage theme colors, admin profile, and application settings.
+        Manage theme colors, admin profile, registered accounts, and application
+        settings.
       </p>
 
       <div className={`mt-8 ${darkCard}`}>
@@ -173,7 +193,9 @@ const Settings = () => {
       </div>
 
       <div className={`mt-8 ${darkCard}`}>
-        <h2 className="text-xl font-black text-white">Main Admin Information</h2>
+        <h2 className="text-xl font-black text-white">
+          Main Admin Information
+        </h2>
 
         <p className="mt-2 text-[#A3A3A3]">
           Update the admin information displayed in the profile page.
@@ -203,33 +225,104 @@ const Settings = () => {
       </div>
 
       <div className={`mt-8 ${darkCard}`}>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-black text-white">
+              Registered Accounts
+            </h2>
+
+            <p className="mt-2 text-[#A3A3A3]">
+              All accounts created from the signup page are shown here.
+            </p>
+          </div>
+
+          <Button variant="outlined" onClick={handleRefreshRegisteredAccounts}>
+            Refresh Accounts
+          </Button>
+        </div>
+
+        <div className="mt-8 overflow-hidden rounded-3xl border border-white/10">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-[#0B0B0B] text-white">
+              <tr>
+                <th className="p-4">Full Name</th>
+                <th className="p-4">Email</th>
+                <th className="p-4">Password</th>
+                <th className="p-4">Role</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {registeredAccounts.length === 0 ? (
+                <tr className="border-b border-white/10 text-[#D4D4D4]">
+                  <td className="p-4 text-[#A3A3A3]" colSpan={4}>
+                    No registered accounts found.
+                  </td>
+                </tr>
+              ) : (
+                registeredAccounts.map((account) => (
+                  <tr
+                    key={account.id}
+                    className="border-b border-white/10 text-[#D4D4D4]"
+                  >
+                    <td className="p-4">{account.fullName}</td>
+                    <td className="p-4">{account.email}</td>
+                    <td className="p-4">{account.password}</td>
+                    <td className="p-4">
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-bold ${
+                          account.role === "admin"
+                            ? "bg-[#E50914]/15 text-[#FF4D00]"
+                            : "bg-white/10 text-[#D4D4D4]"
+                        }`}
+                      >
+                        {account.role}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className={`mt-8 ${darkCard}`}>
         <h2 className="text-xl font-black text-white">Add Another Admin</h2>
 
         <p className="mt-2 text-[#A3A3A3]">
           Add another administrator who can help manage the gym system.
         </p>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <TextField
-            label="New Admin Name"
-            value={newAdminName}
-            onChange={(event) => setNewAdminName(event.target.value)}
-            fullWidth
-          />
+        <form
+          className="mt-6"
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleAddAdmin();
+          }}
+        >
+          <div className="grid gap-4 md:grid-cols-2">
+            <TextField
+              label="New Admin Name"
+              value={newAdminName}
+              onChange={(event) => setNewAdminName(event.target.value)}
+              fullWidth
+            />
 
-          <TextField
-            label="New Admin Email"
-            value={newAdminEmail}
-            onChange={(event) => setNewAdminEmail(event.target.value)}
-            fullWidth
-          />
-        </div>
+            <TextField
+              label="New Admin Email"
+              value={newAdminEmail}
+              onChange={(event) => setNewAdminEmail(event.target.value)}
+              fullWidth
+            />
+          </div>
 
-        <div className="mt-6">
-          <Button variant="contained" onClick={handleAddAdmin}>
-            Add Admin
-          </Button>
-        </div>
+          <div className="mt-6">
+            <Button variant="contained" type="submit">
+              Add Admin
+            </Button>
+          </div>
+        </form>
 
         <div className="mt-8 overflow-hidden rounded-3xl border border-white/10">
           <table className="w-full text-left text-sm">
@@ -244,7 +337,10 @@ const Settings = () => {
 
             <tbody>
               {adminUsers.map((admin) => (
-                <tr key={admin.id} className="border-b border-white/10 text-[#D4D4D4]">
+                <tr
+                  key={admin.id}
+                  className="border-b border-white/10 text-[#D4D4D4]"
+                >
                   <td className="p-4">{admin.name}</td>
                   <td className="p-4">{admin.email}</td>
                   <td className="p-4">{admin.role}</td>

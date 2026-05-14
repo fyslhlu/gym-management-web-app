@@ -1,0 +1,79 @@
+import type { AppUser } from "@/services/authService";
+
+export type WorkoutReservation = {
+  id: number;
+  customerName: string;
+  customerEmail: string;
+  workoutName: string;
+  trainerName: string;
+  goal: string;
+  weeklyPrice: number;
+  weeks: number;
+  daysPerWeek: number;
+  totalSessions: number;
+  totalCost: number;
+  reservationDate: string;
+  status: "Active";
+};
+
+const WORKOUT_RESERVATIONS_KEY = "workoutReservations";
+
+export const getWorkoutReservations = (): WorkoutReservation[] => {
+  const savedReservations = localStorage.getItem(WORKOUT_RESERVATIONS_KEY);
+
+  if (!savedReservations) {
+    return [];
+  }
+
+  return JSON.parse(savedReservations) as WorkoutReservation[];
+};
+
+export const reserveWorkoutProgram = (
+  user: AppUser,
+  workoutName: string,
+  trainerName: string,
+  goal: string,
+  weeklyPrice: number,
+  weeks: number,
+  daysPerWeek: number
+) => {
+  const reservations = getWorkoutReservations();
+
+  if (weeks <= 0 || daysPerWeek <= 0) {
+    return {
+      success: false,
+      message: "Please enter valid workout reservation numbers",
+    };
+  }
+
+  const totalSessions = weeks * daysPerWeek;
+  const totalCost = weeks * weeklyPrice;
+
+  const newReservation: WorkoutReservation = {
+    id: Date.now(),
+    customerName: user.fullName,
+    customerEmail: user.email,
+    workoutName,
+    trainerName,
+    goal,
+    weeklyPrice,
+    weeks,
+    daysPerWeek,
+    totalSessions,
+    totalCost,
+    reservationDate: new Date().toISOString().split("T")[0],
+    status: "Active",
+  };
+
+  const updatedReservations = [...reservations, newReservation];
+
+  localStorage.setItem(
+    WORKOUT_RESERVATIONS_KEY,
+    JSON.stringify(updatedReservations)
+  );
+
+  return {
+    success: true,
+    message: `${workoutName} activated successfully. Total cost: $${totalCost}`,
+  };
+};

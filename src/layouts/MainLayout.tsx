@@ -24,6 +24,7 @@ const MainLayout = () => {
   const customerNavItems = [
     { label: "Dashboard", path: "/dashboard" },
     { label: "Plans", path: "/plans" },
+    { label: "Trainers", path: "/trainers" },
     { label: "Workouts", path: "/workouts" },
     { label: "Attendance", path: "/attendance" },
     { label: "Profile", path: "/profile" },
@@ -49,9 +50,7 @@ const MainLayout = () => {
               </div>
 
               <div>
-                <h2 className="text-xl font-black tracking-wide">
-                  FitMaker
-                </h2>
+                <h2 className="text-xl font-black tracking-wide">FitMaker</h2>
 
                 <p className="text-xs text-[#A3A3A3]">
                   {currentUser?.role === "customer"
@@ -62,16 +61,32 @@ const MainLayout = () => {
             </div>
           </div>
 
-          <div className="mb-6 rounded-2xl border border-white/10 bg-[#1C1C1C] p-4">
-            <p className="text-xs text-[#A3A3A3]">Logged in as</p>
+          <div className="mb-6 rounded-3xl border border-white/10 bg-[#1C1C1C] p-4 shadow-xl">
+            <div className="flex items-center gap-4">
+              <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-[#E50914]/15 text-2xl">
+                {currentUser?.profilePicture ? (
+                  <img
+                    src={currentUser.profilePicture}
+                    alt="User profile"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  "👤"
+                )}
+              </div>
 
-            <p className="mt-1 font-bold text-white">
-              {currentUser?.fullName || "Guest User"}
-            </p>
+              <div className="min-w-0">
+                <p className="text-xs text-[#A3A3A3]">Logged in as</p>
 
-            <p className="mt-1 text-xs font-semibold uppercase text-[#FF4D00]">
-              {currentUser?.role || "guest"}
-            </p>
+                <p className="truncate font-bold text-white">
+                  {currentUser?.fullName || "Guest User"}
+                </p>
+
+                <p className="mt-1 text-xs font-semibold uppercase text-[#FF4D00]">
+                  {currentUser?.role || "guest"}
+                </p>
+              </div>
+            </div>
           </div>
 
           <nav className="space-y-2 text-sm">
@@ -113,10 +128,24 @@ const MainLayout = () => {
                 </h1>
               </div>
 
-              <div className="rounded-full border border-[#E50914]/40 bg-[#E50914]/10 px-4 py-2 text-sm font-semibold text-[#FF4D00]">
-                {currentUser?.role === "customer"
-                  ? "Customer Mode"
-                  : "Admin Mode"}
+              <div className="flex items-center gap-3">
+                <div className="hidden h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-[#E50914]/40 bg-[#111111] text-lg md:flex">
+                  {currentUser?.profilePicture ? (
+                    <img
+                      src={currentUser.profilePicture}
+                      alt="User profile"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    "👤"
+                  )}
+                </div>
+
+                <div className="rounded-full border border-[#E50914]/40 bg-[#E50914]/10 px-4 py-2 text-sm font-semibold text-[#FF4D00]">
+                  {currentUser?.role === "customer"
+                    ? "Customer Mode"
+                    : "Admin Mode"}
+                </div>
               </div>
             </div>
           </div>

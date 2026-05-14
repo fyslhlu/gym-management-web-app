@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  color: #0f172a;
-  background-color: #f8fafc;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: #ffffff;
+  background-color: #111111;
 }
 
 * {
@@ -14,10 +14,27 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #f8fafc;
+  background:
+    radial-gradient(circle at top left, rgba(229, 9, 20, 0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(255, 77, 0, 0.14), transparent 30%),
+    #111111;
+  color: #ffffff;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #111111 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 9999s ease-in-out 0s;
 }

@@ -6,6 +6,7 @@ export type AppUser = {
   email: string;
   password: string;
   role: UserRole;
+  profilePicture?: string;
 };
 
 const USERS_KEY = "registeredUsers";
@@ -101,6 +102,35 @@ export const getCurrentUser = (): AppUser | null => {
   }
 
   return JSON.parse(savedUser) as AppUser;
+};
+
+export const updateCurrentUser = (updatedUser: AppUser) => {
+  const users = getRegisteredUsers();
+
+  const emailAlreadyUsedByAnotherAccount = users.some(
+    (user) =>
+      user.email.toLowerCase() === updatedUser.email.toLowerCase() &&
+      user.id !== updatedUser.id
+  );
+
+  if (emailAlreadyUsedByAnotherAccount) {
+    return {
+      success: false,
+      message: "This email is already used by another account",
+    };
+  }
+
+  const updatedUsers = users.map((user) =>
+    user.id === updatedUser.id ? updatedUser : user
+  );
+
+  saveRegisteredUsers(updatedUsers);
+  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updatedUser));
+
+  return {
+    success: true,
+    message: "Profile updated successfully",
+  };
 };
 
 export const logoutUser = () => {

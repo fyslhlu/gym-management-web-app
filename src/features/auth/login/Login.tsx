@@ -42,6 +42,11 @@ const Login = () => {
     setIsDialogOpen(true);
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleLoginClick();
+  };
+
   const handleConfirmLogin = () => {
     setIsDialogOpen(false);
     setIsLoading(true);
@@ -64,7 +69,7 @@ const Login = () => {
         Login
       </h2>
 
-      <div className="space-y-4">
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <TextField
           fullWidth
           label="Email"
@@ -87,7 +92,7 @@ const Login = () => {
           fullWidth
           variant="contained"
           size="large"
-          onClick={handleLoginClick}
+          type="submit"
           disabled={isLoading}
         >
           {isLoading ? (
@@ -99,20 +104,20 @@ const Login = () => {
             "Login"
           )}
         </Button>
-      </div>
+      </form>
 
       <div className="mt-4 space-y-3 text-center text-sm text-[#A3A3A3]">
-  <p>Default admin account:</p>
-  <p>heloufaysal4@gmail.com / admin123</p>
+        <p>Default admin account:</p>
+        <p>heloufaysal4@gmail.com / admin123</p>
 
-  <button
-    type="button"
-    onClick={() => navigate("/signup")}
-    className="font-bold text-[#FF4D00] transition hover:text-white"
-  >
-    Create a new account
-  </button>
-</div>
+        <button
+          type="button"
+          onClick={() => navigate("/signup")}
+          className="font-bold text-[#FF4D00] transition hover:text-white"
+        >
+          Create a new account
+        </button>
+      </div>
 
       <Dialog open={isDialogOpen} onClose={handleCancelLogin}>
         <DialogTitle>Confirm Login</DialogTitle>

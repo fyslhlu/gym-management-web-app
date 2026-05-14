@@ -54,13 +54,18 @@ const Signup = () => {
     navigate("/login");
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleSignup();
+  };
+
   return (
     <div>
       <h2 className="mb-6 text-center text-2xl font-black text-white">
         Create Account
       </h2>
 
-      <div className="space-y-4">
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <TextField
           fullWidth
           label="Full Name"
@@ -101,14 +106,22 @@ const Signup = () => {
           </Select>
         </FormControl>
 
-        <Button fullWidth variant="contained" size="large" onClick={handleSignup}>
+        <Button fullWidth variant="contained" size="large" type="submit">
           Create Account
         </Button>
-      </div>
+      </form>
 
-      <p className="mt-4 text-center text-sm text-[#A3A3A3]">
-        Already have an account? Go to login.
-      </p>
+      <div className="mt-4 text-center text-sm text-[#A3A3A3]">
+        <span>Already have an account? </span>
+
+        <button
+          type="button"
+          onClick={() => navigate("/login")}
+          className="font-bold text-[#FF4D00] transition hover:text-white"
+        >
+          Go to login
+        </button>
+      </div>
     </div>
   );
 };
