@@ -5,15 +5,16 @@ import {
   showSuccess,
   showWarning,
 } from "@/services/notificationService";
+import { darkCard } from "@/theme/pageStyles";
 
 const ToastButtons = () => {
   return (
-    <div className="rounded-2xl bg-white p-6 shadow">
-      <h2 className="text-xl font-semibold text-slate-900">
+    <div className={darkCard}>
+      <h2 className="text-xl font-black text-white">
         Toast Notification Test
       </h2>
 
-      <p className="mt-2 text-sm text-slate-500">
+      <p className="mt-2 text-sm text-[#A3A3A3]">
         Click these buttons to test success, warning, and error notifications.
       </p>
 

@@ -1,32 +1,130 @@
-import { useState } from "react";
-import { Button } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Button, TextField } from "@mui/material";
 
-import { showSuccess } from "@/services/notificationService";
+import { showError, showSuccess, showWarning } from "@/services/notificationService";
 import { themeOptions, type ThemeColorName } from "@/theme/themeConfig";
+import { darkCard, pageSubtitle, pageTitle } from "@/theme/pageStyles";
+
+type AdminUser = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+};
 
 const Settings = () => {
-  const [selectedTheme, setSelectedTheme] =
-    useState<ThemeColorName>("red");
+  const [selectedTheme, setSelectedTheme] = useState<ThemeColorName>("red");
+
+  const [adminName, setAdminName] = useState("Faysal Helou");
+  const [adminEmail, setAdminEmail] = useState("heloufaysal4@gmail.com");
+
+  const [newAdminName, setNewAdminName] = useState("");
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+
+  const [adminUsers, setAdminUsers] = useState<AdminUser[]>([
+    {
+      id: 1,
+      name: "Faysal Helou",
+      email: "heloufaysal4@gmail.com",
+      role: "Main Administrator",
+    },
+  ]);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("selectedTheme") as ThemeColorName | null;
+    const savedName = localStorage.getItem("adminName");
+    const savedEmail = localStorage.getItem("adminEmail");
+    const savedAdmins = localStorage.getItem("adminUsers");
+
+    if (savedTheme) {
+      setSelectedTheme(savedTheme);
+    }
+
+    if (savedName) {
+      setAdminName(savedName);
+    }
+
+    if (savedEmail) {
+      setAdminEmail(savedEmail);
+    }
+
+    if (savedAdmins) {
+      setAdminUsers(JSON.parse(savedAdmins));
+    }
+  }, []);
 
   const handleThemeChange = (themeName: ThemeColorName) => {
     setSelectedTheme(themeName);
     showSuccess(`${themeOptions[themeName].name} selected`);
   };
 
+  const handleSaveSettings = () => {
+    localStorage.setItem("selectedTheme", selectedTheme);
+    localStorage.setItem("adminName", adminName);
+    localStorage.setItem("adminEmail", adminEmail);
+
+    showSuccess("Settings saved successfully");
+  };
+
+  const handleAddAdmin = () => {
+    if (!newAdminName || !newAdminEmail) {
+      showWarning("Please enter admin name and email");
+      return;
+    }
+
+    const emailAlreadyExists = adminUsers.some(
+      (admin) => admin.email.toLowerCase() === newAdminEmail.toLowerCase()
+    );
+
+    if (emailAlreadyExists) {
+      showError("This admin email already exists");
+      return;
+    }
+
+    const newAdmin: AdminUser = {
+      id: Date.now(),
+      name: newAdminName,
+      email: newAdminEmail,
+      role: "Administrator",
+    };
+
+    const updatedAdmins = [...adminUsers, newAdmin];
+
+    setAdminUsers(updatedAdmins);
+    localStorage.setItem("adminUsers", JSON.stringify(updatedAdmins));
+
+    setNewAdminName("");
+    setNewAdminEmail("");
+
+    showSuccess("New admin added successfully");
+  };
+
+  const handleRemoveAdmin = (adminId: number) => {
+    if (adminId === 1) {
+      showWarning("Main administrator cannot be removed");
+      return;
+    }
+
+    const updatedAdmins = adminUsers.filter((admin) => admin.id !== adminId);
+
+    setAdminUsers(updatedAdmins);
+    localStorage.setItem("adminUsers", JSON.stringify(updatedAdmins));
+
+    showSuccess("Admin removed successfully");
+  };
+
   return (
     <div>
-      <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
+      <h1 className={pageTitle}>Settings</h1>
 
-      <p className="mt-2 text-slate-500">
-        Manage theme colors and application settings.
+      <p className={pageSubtitle}>
+        Manage theme colors, admin profile, and application settings.
       </p>
 
-      <div className="mt-8 rounded-2xl bg-white p-6 shadow">
-        <h2 className="text-xl font-semibold text-slate-900">
-          Theme Controls
-        </h2>
+      <div className={`mt-8 ${darkCard}`}>
+        <h2 className="text-xl font-black text-white">Theme Controls</h2>
 
-        <p className="mt-2 text-slate-500">
+        <p className="mt-2 text-[#A3A3A3]">
           Choose a theme color for the Gym Management Web Application.
         </p>
 
@@ -40,27 +138,25 @@ const Settings = () => {
                 key={themeKey}
                 type="button"
                 onClick={() => handleThemeChange(themeKey)}
-                className={`rounded-2xl border-2 bg-white p-5 text-left shadow-sm transition ${
+                className={`rounded-3xl border-2 bg-[#111111] p-5 text-left shadow-xl transition ${
                   isSelected
-                    ? "border-emerald-500"
-                    : "border-slate-200 hover:border-slate-300"
+                    ? "border-[#E50914]"
+                    : "border-white/10 hover:border-[#E50914]/50"
                 }`}
               >
                 <div
-                  className="mb-4 h-12 rounded-xl"
+                  className="mb-4 h-12 rounded-2xl"
                   style={{ backgroundColor: theme.secondary }}
                 />
 
-                <h3 className="font-semibold text-slate-900">
-                  {theme.name}
-                </h3>
+                <h3 className="font-black text-white">{theme.name}</h3>
 
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-[#A3A3A3]">
                   Accent color: {theme.secondary}
                 </p>
 
                 {isSelected && (
-                  <p className="mt-3 text-sm font-medium text-emerald-600">
+                  <p className="mt-3 text-sm font-bold text-[#FF4D00]">
                     Selected
                   </p>
                 )}
@@ -70,12 +166,100 @@ const Settings = () => {
         </div>
 
         <div className="mt-6">
-          <Button
-            variant="contained"
-            onClick={() => showSuccess("Settings saved successfully")}
-          >
+          <Button variant="contained" onClick={handleSaveSettings}>
             Save Settings
           </Button>
+        </div>
+      </div>
+
+      <div className={`mt-8 ${darkCard}`}>
+        <h2 className="text-xl font-black text-white">Main Admin Information</h2>
+
+        <p className="mt-2 text-[#A3A3A3]">
+          Update the admin information displayed in the profile page.
+        </p>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <TextField
+            label="Admin Name"
+            value={adminName}
+            onChange={(event) => setAdminName(event.target.value)}
+            fullWidth
+          />
+
+          <TextField
+            label="Admin Email"
+            value={adminEmail}
+            onChange={(event) => setAdminEmail(event.target.value)}
+            fullWidth
+          />
+        </div>
+
+        <div className="mt-6">
+          <Button variant="contained" onClick={handleSaveSettings}>
+            Save Admin Info
+          </Button>
+        </div>
+      </div>
+
+      <div className={`mt-8 ${darkCard}`}>
+        <h2 className="text-xl font-black text-white">Add Another Admin</h2>
+
+        <p className="mt-2 text-[#A3A3A3]">
+          Add another administrator who can help manage the gym system.
+        </p>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <TextField
+            label="New Admin Name"
+            value={newAdminName}
+            onChange={(event) => setNewAdminName(event.target.value)}
+            fullWidth
+          />
+
+          <TextField
+            label="New Admin Email"
+            value={newAdminEmail}
+            onChange={(event) => setNewAdminEmail(event.target.value)}
+            fullWidth
+          />
+        </div>
+
+        <div className="mt-6">
+          <Button variant="contained" onClick={handleAddAdmin}>
+            Add Admin
+          </Button>
+        </div>
+
+        <div className="mt-8 overflow-hidden rounded-3xl border border-white/10">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-[#0B0B0B] text-white">
+              <tr>
+                <th className="p-4">Admin Name</th>
+                <th className="p-4">Email</th>
+                <th className="p-4">Role</th>
+                <th className="p-4">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {adminUsers.map((admin) => (
+                <tr key={admin.id} className="border-b border-white/10 text-[#D4D4D4]">
+                  <td className="p-4">{admin.name}</td>
+                  <td className="p-4">{admin.email}</td>
+                  <td className="p-4">{admin.role}</td>
+                  <td className="p-4">
+                    <button
+                      onClick={() => handleRemoveAdmin(admin.id)}
+                      className="rounded-full border border-red-500/40 px-3 py-1 text-xs font-bold text-red-400 transition hover:bg-red-500/10"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

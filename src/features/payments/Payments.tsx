@@ -1,3 +1,12 @@
+import {
+  darkStatCard,
+  darkTableHead,
+  darkTableRow,
+  darkTableWrapper,
+  pageSubtitle,
+  pageTitle,
+} from "@/theme/pageStyles";
+
 const Payments = () => {
   const payments = [
     {
@@ -28,32 +37,32 @@ const Payments = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-slate-900">Payments</h1>
+      <h1 className={pageTitle}>Payments</h1>
 
-      <p className="mt-2 text-slate-500">
+      <p className={pageSubtitle}>
         Track gym member payments and billing information.
       </p>
 
       <div className="mt-8 grid gap-6 md:grid-cols-3">
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <p className="text-sm text-slate-500">Total Revenue</p>
-          <h2 className="mt-2 text-3xl font-bold text-emerald-500">$350</h2>
+        <div className={darkStatCard}>
+          <p className="text-sm text-[#A3A3A3]">Total Revenue</p>
+          <h2 className="mt-2 text-3xl font-black text-[#E50914]">$350</h2>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <p className="text-sm text-slate-500">Paid Payments</p>
-          <h2 className="mt-2 text-3xl font-bold text-slate-900">2</h2>
+        <div className={darkStatCard}>
+          <p className="text-sm text-[#A3A3A3]">Paid Payments</p>
+          <h2 className="mt-2 text-3xl font-black text-white">2</h2>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <p className="text-sm text-slate-500">Unpaid Payments</p>
-          <h2 className="mt-2 text-3xl font-bold text-red-500">1</h2>
+        <div className={darkStatCard}>
+          <p className="text-sm text-[#A3A3A3]">Unpaid Payments</p>
+          <h2 className="mt-2 text-3xl font-black text-red-400">1</h2>
         </div>
       </div>
 
-      <div className="mt-8 overflow-hidden rounded-2xl bg-white shadow">
+      <div className={darkTableWrapper}>
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-900 text-white">
+          <thead className={darkTableHead}>
             <tr>
               <th className="p-4">Member</th>
               <th className="p-4">Amount</th>
@@ -65,17 +74,17 @@ const Payments = () => {
 
           <tbody>
             {payments.map((payment) => (
-              <tr key={payment.id} className="border-b">
+              <tr key={payment.id} className={darkTableRow}>
                 <td className="p-4">{payment.member}</td>
                 <td className="p-4">{payment.amount}</td>
                 <td className="p-4">{payment.method}</td>
                 <td className="p-4">{payment.date}</td>
                 <td className="p-4">
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
+                    className={`rounded-full px-3 py-1 text-xs font-bold ${
                       payment.status === "Paid"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-red-100 text-red-700"
+                        ? "bg-emerald-500/15 text-emerald-400"
+                        : "bg-red-500/15 text-red-400"
                     }`}
                   >
                     {payment.status}

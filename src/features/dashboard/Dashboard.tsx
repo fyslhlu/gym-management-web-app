@@ -1,6 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 import ToastButtons from "@/components/toast/ToastButtons";
+import { showSuccess } from "@/services/notificationService";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const stats = [
     {
       label: "Client Satisfaction",
@@ -28,18 +33,22 @@ const Dashboard = () => {
     {
       title: "Losing Weight",
       text: "Track members, subscriptions, and attendance for weight loss programs.",
+      message: "Weight loss program details opened",
     },
     {
       title: "Building Muscle",
       text: "Manage trainers, workouts, and progress-focused training plans.",
+      message: "Muscle building program details opened",
     },
     {
       title: "Training at Home",
       text: "Organize remote workout plans and online fitness subscriptions.",
+      message: "Home training program details opened",
     },
     {
       title: "Gym Plan",
       text: "Manage membership plans, payments, and active subscriptions.",
+      message: "Gym plan details opened",
     },
   ];
 
@@ -65,11 +74,17 @@ const Dashboard = () => {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <button className="rounded-full bg-[#E50914] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-950/40">
+              <button
+                onClick={() => navigate("/members")}
+                className="rounded-full bg-[#E50914] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-950/40 transition hover:bg-[#ff1420]"
+              >
                 Start Your Journey
               </button>
 
-              <button className="rounded-full border border-[#E50914] px-6 py-3 text-sm font-bold text-[#FF4D00]">
+              <button
+                onClick={() => navigate("/plans")}
+                className="rounded-full border border-[#E50914] px-6 py-3 text-sm font-bold text-[#FF4D00] transition hover:bg-[#E50914]/10"
+              >
                 Explore Programs
               </button>
             </div>
@@ -105,9 +120,11 @@ const Dashboard = () => {
               <h2 className="text-2xl font-black text-[#E50914]">
                 {stat.value}
               </h2>
+
               <p className="mt-1 text-sm font-semibold text-white">
                 {stat.label}
               </p>
+
               <p className="mt-1 text-xs text-[#A3A3A3]">
                 {stat.description}
               </p>
@@ -137,7 +154,10 @@ const Dashboard = () => {
                 {service.text}
               </p>
 
-              <button className="mt-5 text-sm font-bold text-[#FF4D00]">
+              <button
+                onClick={() => showSuccess(service.message)}
+                className="mt-5 text-sm font-bold text-[#FF4D00] transition hover:text-white"
+              >
                 Learn More
               </button>
             </div>

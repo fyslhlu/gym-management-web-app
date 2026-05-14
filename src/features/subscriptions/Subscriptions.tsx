@@ -1,3 +1,11 @@
+import {
+  darkTableHead,
+  darkTableRow,
+  darkTableWrapper,
+  pageSubtitle,
+  pageTitle,
+} from "@/theme/pageStyles";
+
 const Subscriptions = () => {
   const subscriptions = [
     {
@@ -28,15 +36,15 @@ const Subscriptions = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-slate-900">Subscriptions</h1>
+      <h1 className={pageTitle}>Subscriptions</h1>
 
-      <p className="mt-2 text-slate-500">
+      <p className={pageSubtitle}>
         Track active and expired gym member subscriptions.
       </p>
 
-      <div className="mt-8 overflow-hidden rounded-2xl bg-white shadow">
+      <div className={darkTableWrapper}>
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-900 text-white">
+          <thead className={darkTableHead}>
             <tr>
               <th className="p-4">Member</th>
               <th className="p-4">Plan</th>
@@ -48,17 +56,17 @@ const Subscriptions = () => {
 
           <tbody>
             {subscriptions.map((subscription) => (
-              <tr key={subscription.id} className="border-b">
+              <tr key={subscription.id} className={darkTableRow}>
                 <td className="p-4">{subscription.member}</td>
                 <td className="p-4">{subscription.plan}</td>
                 <td className="p-4">{subscription.startDate}</td>
                 <td className="p-4">{subscription.endDate}</td>
                 <td className="p-4">
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
+                    className={`rounded-full px-3 py-1 text-xs font-bold ${
                       subscription.status === "Active"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-red-100 text-red-700"
+                        ? "bg-emerald-500/15 text-emerald-400"
+                        : "bg-red-500/15 text-red-400"
                     }`}
                   >
                     {subscription.status}

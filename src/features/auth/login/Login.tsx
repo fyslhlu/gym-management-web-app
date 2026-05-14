@@ -10,6 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 
+import { loginUser } from "@/services/authService";
 import {
   showError,
   showSuccess,
@@ -25,17 +26,16 @@ const Login = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const correctEmail = "admin@gym.com";
-  const correctPassword = "admin123";
-
   const handleLoginClick = () => {
     if (!email || !password) {
       showWarning("Please enter both email and password");
       return;
     }
 
-    if (email !== correctEmail || password !== correctPassword) {
-      showError("Invalid email or password");
+    const result = loginUser(email, password);
+
+    if (!result.success || !result.user) {
+      showError(result.message);
       return;
     }
 
@@ -60,7 +60,7 @@ const Login = () => {
 
   return (
     <div>
-      <h2 className="mb-6 text-center text-2xl font-bold text-slate-900">
+      <h2 className="mb-6 text-center text-2xl font-black text-white">
         Login
       </h2>
 
@@ -69,7 +69,7 @@ const Login = () => {
           fullWidth
           label="Email"
           type="email"
-          placeholder="admin@gym.com"
+          placeholder="Enter your email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
         />
@@ -78,7 +78,7 @@ const Login = () => {
           fullWidth
           label="Password"
           type="password"
-          placeholder="admin123"
+          placeholder="Enter your password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
@@ -101,9 +101,18 @@ const Login = () => {
         </Button>
       </div>
 
-      <p className="mt-4 text-center text-sm text-slate-500">
-        Demo account: admin@gym.com / admin123
-      </p>
+      <div className="mt-4 space-y-3 text-center text-sm text-[#A3A3A3]">
+  <p>Default admin account:</p>
+  <p>heloufaysal4@gmail.com / admin123</p>
+
+  <button
+    type="button"
+    onClick={() => navigate("/signup")}
+    className="font-bold text-[#FF4D00] transition hover:text-white"
+  >
+    Create a new account
+  </button>
+</div>
 
       <Dialog open={isDialogOpen} onClose={handleCancelLogin}>
         <DialogTitle>Confirm Login</DialogTitle>

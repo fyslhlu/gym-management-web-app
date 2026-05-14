@@ -1,7 +1,13 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+
+import { getCurrentUser, logoutUser } from "@/services/authService";
+import { showSuccess } from "@/services/notificationService";
 
 const MainLayout = () => {
-  const navItems = [
+  const navigate = useNavigate();
+  const currentUser = getCurrentUser();
+
+  const adminNavItems = [
     { label: "Dashboard", path: "/dashboard" },
     { label: "Members", path: "/members" },
     { label: "Trainers", path: "/trainers" },
@@ -14,6 +20,23 @@ const MainLayout = () => {
     { label: "Profile", path: "/profile" },
     { label: "Settings", path: "/settings" },
   ];
+
+  const customerNavItems = [
+    { label: "Dashboard", path: "/dashboard" },
+    { label: "Plans", path: "/plans" },
+    { label: "Workouts", path: "/workouts" },
+    { label: "Attendance", path: "/attendance" },
+    { label: "Profile", path: "/profile" },
+  ];
+
+  const navItems =
+    currentUser?.role === "customer" ? customerNavItems : adminNavItems;
+
+  const handleLogout = () => {
+    logoutUser();
+    showSuccess("Logged out successfully");
+    navigate("/login");
+  };
 
   return (
     <div className="min-h-screen bg-[#111111] text-white">
@@ -29,11 +52,26 @@ const MainLayout = () => {
                 <h2 className="text-xl font-black tracking-wide">
                   FitMaker
                 </h2>
+
                 <p className="text-xs text-[#A3A3A3]">
-                  Gym Management
+                  {currentUser?.role === "customer"
+                    ? "Customer Portal"
+                    : "Admin Dashboard"}
                 </p>
               </div>
             </div>
+          </div>
+
+          <div className="mb-6 rounded-2xl border border-white/10 bg-[#1C1C1C] p-4">
+            <p className="text-xs text-[#A3A3A3]">Logged in as</p>
+
+            <p className="mt-1 font-bold text-white">
+              {currentUser?.fullName || "Guest User"}
+            </p>
+
+            <p className="mt-1 text-xs font-semibold uppercase text-[#FF4D00]">
+              {currentUser?.role || "guest"}
+            </p>
           </div>
 
           <nav className="space-y-2 text-sm">
@@ -52,6 +90,13 @@ const MainLayout = () => {
                 {item.label}
               </NavLink>
             ))}
+
+            <button
+              onClick={handleLogout}
+              className="mt-6 block w-full rounded-xl border border-red-500/30 px-4 py-3 text-left font-medium text-red-400 transition hover:bg-red-500/10"
+            >
+              Logout
+            </button>
           </nav>
         </aside>
 
@@ -60,15 +105,18 @@ const MainLayout = () => {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-sm text-[#A3A3A3]">
-                  Welcome back, Admin
+                  Welcome back, {currentUser?.fullName || "Admin"}
                 </p>
+
                 <h1 className="text-2xl font-black">
                   Achieve Your Fitness Goals With FitMaker
                 </h1>
               </div>
 
               <div className="rounded-full border border-[#E50914]/40 bg-[#E50914]/10 px-4 py-2 text-sm font-semibold text-[#FF4D00]">
-                Premium Dashboard
+                {currentUser?.role === "customer"
+                  ? "Customer Mode"
+                  : "Admin Mode"}
               </div>
             </div>
           </div>

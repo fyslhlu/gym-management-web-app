@@ -1,3 +1,12 @@
+import {
+  darkStatCard,
+  darkTableHead,
+  darkTableRow,
+  darkTableWrapper,
+  pageSubtitle,
+  pageTitle,
+} from "@/theme/pageStyles";
+
 const Attendance = () => {
   const attendanceRecords = [
     {
@@ -28,32 +37,32 @@ const Attendance = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-slate-900">Attendance</h1>
+      <h1 className={pageTitle}>Attendance</h1>
 
-      <p className="mt-2 text-slate-500">
+      <p className={pageSubtitle}>
         Track member check-ins and check-outs.
       </p>
 
       <div className="mt-8 grid gap-6 md:grid-cols-3">
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <p className="text-sm text-slate-500">Today Check-ins</p>
-          <h2 className="mt-2 text-3xl font-bold text-slate-900">3</h2>
+        <div className={darkStatCard}>
+          <p className="text-sm text-[#A3A3A3]">Today Check-ins</p>
+          <h2 className="mt-2 text-3xl font-black text-white">3</h2>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <p className="text-sm text-slate-500">Currently In Gym</p>
-          <h2 className="mt-2 text-3xl font-bold text-emerald-500">1</h2>
+        <div className={darkStatCard}>
+          <p className="text-sm text-[#A3A3A3]">Currently In Gym</p>
+          <h2 className="mt-2 text-3xl font-black text-[#E50914]">1</h2>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <p className="text-sm text-slate-500">Completed Sessions</p>
-          <h2 className="mt-2 text-3xl font-bold text-slate-900">2</h2>
+        <div className={darkStatCard}>
+          <p className="text-sm text-[#A3A3A3]">Completed Sessions</p>
+          <h2 className="mt-2 text-3xl font-black text-white">2</h2>
         </div>
       </div>
 
-      <div className="mt-8 overflow-hidden rounded-2xl bg-white shadow">
+      <div className={darkTableWrapper}>
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-900 text-white">
+          <thead className={darkTableHead}>
             <tr>
               <th className="p-4">Member</th>
               <th className="p-4">Date</th>
@@ -65,17 +74,17 @@ const Attendance = () => {
 
           <tbody>
             {attendanceRecords.map((record) => (
-              <tr key={record.id} className="border-b">
+              <tr key={record.id} className={darkTableRow}>
                 <td className="p-4">{record.member}</td>
                 <td className="p-4">{record.date}</td>
                 <td className="p-4">{record.checkIn}</td>
                 <td className="p-4">{record.checkOut}</td>
                 <td className="p-4">
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
+                    className={`rounded-full px-3 py-1 text-xs font-bold ${
                       record.status === "Completed"
-                        ? "bg-slate-100 text-slate-700"
-                        : "bg-emerald-100 text-emerald-700"
+                        ? "bg-white/10 text-[#D4D4D4]"
+                        : "bg-[#E50914]/15 text-[#FF4D00]"
                     }`}
                   >
                     {record.status}

@@ -1,3 +1,4 @@
+import type React from "react";
 import { AgGridReact } from "ag-grid-react";
 import {
   AllCommunityModule,
@@ -72,16 +73,34 @@ const Members = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-slate-900">Members</h1>
+      <h1 className="text-3xl font-black text-white">Members</h1>
 
-      <p className="mt-2 text-slate-500">
+      <p className="mt-2 text-[#A3A3A3]">
         Manage gym members using AG Grid with sorting, filtering, and resizing.
       </p>
 
-      <div className="mt-8 rounded-2xl bg-white p-6 shadow">
+      <div className="mt-8 rounded-3xl border border-white/10 bg-[#1C1C1C] p-6 shadow-xl">
         <div
-          className="ag-theme-quartz"
-          style={{ height: "420px", width: "100%" }}
+          className="ag-theme-quartz-dark"
+          style={
+            {
+              height: "420px",
+              width: "100%",
+              "--ag-background-color": "#1C1C1C",
+              "--ag-header-background-color": "#0B0B0B",
+              "--ag-foreground-color": "#FFFFFF",
+              "--ag-header-foreground-color": "#FFFFFF",
+              "--ag-border-color": "rgba(255,255,255,0.12)",
+              "--ag-row-hover-color": "rgba(229,9,20,0.12)",
+              "--ag-selected-row-background-color": "rgba(229,9,20,0.2)",
+              "--ag-odd-row-background-color": "#181818",
+              "--ag-row-border-color": "rgba(255,255,255,0.08)",
+              "--ag-input-background-color": "#111111",
+              "--ag-input-border-color": "rgba(255,255,255,0.15)",
+              "--ag-secondary-foreground-color": "#A3A3A3",
+              "--ag-accent-color": "#E50914",
+            } as React.CSSProperties
+          }
         >
           <AgGridReact<Member>
             rowData={rowData}
